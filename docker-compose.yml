@@ -1,0 +1,14 @@
+services:
+  postgres:
+    image: postgres:14-alpine
+    environment:
+      POSTGRES_USER: rockadenadmin
+      POSTGRES_PASSWORD: rockaden123
+      POSTGRES_DB: rockaden
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:

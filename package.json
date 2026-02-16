@@ -1,0 +1,40 @@
+{
+  "name": "rockaden2",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev -p 3002",
+    "build": "next build",
+    "start": "next start -p 3002",
+    "lint": "eslint",
+    "seed": "tsx scripts/seed.ts",
+    "generate:types": "payload generate:types"
+  },
+  "dependencies": {
+    "@faceless-ui/modal": "3.0.0",
+    "@faceless-ui/scroll-info": "2.0.0",
+    "@heroicons/react": "^2.2.0",
+    "@payloadcms/db-postgres": "3.76.1",
+    "@payloadcms/next": "3.76.1",
+    "@payloadcms/richtext-lexical": "3.76.1",
+    "graphql": "^16.8.1",
+    "next": "15.4.11",
+    "payload": "3.76.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "sharp": "^0.33.0"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^22",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "15.4.11",
+    "tailwindcss": "^4",
+    "tsx": "^4.20.5",
+    "typescript": "^5"
+  }
+}
