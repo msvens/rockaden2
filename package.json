@@ -8,6 +8,8 @@
     "build": "next build",
     "start": "next start -p 3002",
     "lint": "eslint",
+    "typecheck": "tsc --noEmit",
+    "check": "pnpm typecheck && pnpm lint && pnpm build",
     "seed": "tsx scripts/seed.ts",
     "generate:types": "payload generate:types"
   },
@@ -24,6 +26,13 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "sharp": "^0.33.0"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "sharp",
+      "unrs-resolver"
+    ]
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
