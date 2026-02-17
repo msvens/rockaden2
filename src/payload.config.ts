@@ -3,6 +3,7 @@ import { postgresAdapter } from '@payloadcms/db-postgres'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import sharp from 'sharp'
 import path from 'path'
+import fs from 'fs'
 import { fileURLToPath } from 'url'
 
 import { Users } from './collections/Users'
@@ -12,6 +13,16 @@ import { Media } from './collections/Media'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
+
+// SSL configuration for PostgreSQL
+// If DB_CA_CERT_PATH env var is set, use that cert for SSL verification
+const caCertPath = process.env.DB_CA_CERT_PATH
+const sslConfig = caCertPath && fs.existsSync(caCertPath)
+  ? {
+      ca: fs.readFileSync(caCertPath).toString(),
+      rejectUnauthorized: true,
+    }
+  : undefined
 
 export default buildConfig({
   admin: {
@@ -29,6 +40,7 @@ export default buildConfig({
   db: postgresAdapter({
     pool: {
       connectionString: process.env.DATABASE_URL || '',
+      ssl: sslConfig,
     },
   }),
   sharp,

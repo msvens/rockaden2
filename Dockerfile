@@ -38,6 +38,9 @@ RUN chown nextjs:nodejs .next
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
+# Copy migrations for Payload CMS
+COPY --from=builder --chown=nextjs:nodejs /app/src/migrations ./src/migrations
+
 # Create media directory for uploads
 RUN mkdir -p media && chown nextjs:nodejs media
 
