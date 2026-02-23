@@ -72,6 +72,8 @@ export interface Config {
     pages: Page;
     media: Media;
     events: Event;
+    'training-groups': TrainingGroup;
+    'training-sessions': TrainingSession;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -84,6 +86,8 @@ export interface Config {
     pages: PagesSelect<false> | PagesSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     events: EventsSelect<false> | EventsSelect<true>;
+    'training-groups': TrainingGroupsSelect<false> | TrainingGroupsSelect<true>;
+    'training-sessions': TrainingSessionsSelect<false> | TrainingSessionsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -269,6 +273,14 @@ export interface Event {
   slug: string;
   status: 'draft' | 'published';
   description?: string | null;
+  /**
+   * URL for more information. Internal (e.g. /training/1) or external (https://...).
+   */
+  link?: string | null;
+  /**
+   * Text shown for the link, e.g. "More info" or "Go to training".
+   */
+  linkLabel?: string | null;
   startDate: string;
   endDate: string;
   location?: string | null;
@@ -293,6 +305,71 @@ export interface Event {
     | string
     | number
     | boolean
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "training-groups".
+ */
+export interface TrainingGroup {
+  id: number;
+  name: string;
+  /**
+   * Auto-generated from name. Edit to override.
+   */
+  slug: string;
+  status: 'draft' | 'active' | 'archived';
+  /**
+   * Link to the recurring training event for session scheduling.
+   */
+  event?: (number | null) | Event;
+  description?: string | null;
+  /**
+   * e.g. VT2026
+   */
+  semester?: string | null;
+  /**
+   * Enable to track round-robin pairings and standings.
+   */
+  hasTournament?: boolean | null;
+  participants?:
+    | {
+        name: string;
+        ssfId: number;
+        active?: boolean | null;
+        id?: string | null;
+      }[]
+    | null;
+  createdBy?: (number | null) | User;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "training-sessions".
+ */
+export interface TrainingSession {
+  id: number;
+  group: number | TrainingGroup;
+  sessionDate: string;
+  notes?: string | null;
+  attendance?:
+    | {
+        participantId: string;
+        present?: boolean | null;
+        id?: string | null;
+      }[]
+    | null;
+  games?:
+    | {
+        round: number;
+        whiteId: string;
+        blackId: string;
+        result?: ('1-0' | '0.5-0.5' | '0-1' | 'bye-white' | 'bye-black') | null;
+        id?: string | null;
+      }[]
     | null;
   updatedAt: string;
   createdAt: string;
@@ -340,6 +417,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'events';
         value: number | Event;
+      } | null)
+    | ({
+        relationTo: 'training-groups';
+        value: number | TrainingGroup;
+      } | null)
+    | ({
+        relationTo: 'training-sessions';
+        value: number | TrainingSession;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -496,6 +581,8 @@ export interface EventsSelect<T extends boolean = true> {
   slug?: T;
   status?: T;
   description?: T;
+  link?: T;
+  linkLabel?: T;
   startDate?: T;
   endDate?: T;
   location?: T;
@@ -504,6 +591,57 @@ export interface EventsSelect<T extends boolean = true> {
   recurrenceType?: T;
   recurrenceEndDate?: T;
   excludedDates?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "training-groups_select".
+ */
+export interface TrainingGroupsSelect<T extends boolean = true> {
+  name?: T;
+  slug?: T;
+  status?: T;
+  event?: T;
+  description?: T;
+  semester?: T;
+  hasTournament?: T;
+  participants?:
+    | T
+    | {
+        name?: T;
+        ssfId?: T;
+        active?: T;
+        id?: T;
+      };
+  createdBy?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "training-sessions_select".
+ */
+export interface TrainingSessionsSelect<T extends boolean = true> {
+  group?: T;
+  sessionDate?: T;
+  notes?: T;
+  attendance?:
+    | T
+    | {
+        participantId?: T;
+        present?: T;
+        id?: T;
+      };
+  games?:
+    | T
+    | {
+        round?: T;
+        whiteId?: T;
+        blackId?: T;
+        result?: T;
+        id?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
 }

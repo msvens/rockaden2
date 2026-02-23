@@ -48,7 +48,7 @@ export default function NavbarConfig() {
     {
       kind: 'link',
       id: 'training',
-      href: '/traning',
+      href: '/training',
       icon: AcademicCapIcon,
       label: t.navbar.navigation.training,
     },

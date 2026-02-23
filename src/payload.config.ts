@@ -13,6 +13,8 @@ import { News } from './collections/News'
 import { Pages } from './collections/Pages'
 import { Media } from './collections/Media'
 import { Events } from './collections/Events'
+import { TrainingGroups } from './collections/TrainingGroups'
+import { TrainingSessions } from './collections/TrainingSessions'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -38,7 +40,7 @@ export default buildConfig({
     supportedLanguages: { sv, en },
     fallbackLanguage: 'sv',
   },
-  collections: [Users, News, Pages, Media, Events],
+  collections: [Users, News, Pages, Media, Events, TrainingGroups, TrainingSessions],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {

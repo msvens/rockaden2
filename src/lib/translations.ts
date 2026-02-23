@@ -95,6 +95,45 @@ export interface Translations {
     weekly: string;
     biweekly: string;
   };
+  training: {
+    title: string;
+    subtitle: string;
+    participants: string;
+    sessions: string;
+    standings: string;
+    attendance: string;
+    pairings: string;
+    round: string;
+    result: string;
+    present: string;
+    absent: string;
+    points: string;
+    played: string;
+    wins: string;
+    draws: string;
+    losses: string;
+    rating: string;
+    bye: string;
+    semester: string;
+    startSession: string;
+    saveAttendance: string;
+    saveResults: string;
+    addParticipant: string;
+    removeParticipant: string;
+    noGroups: string;
+    tournament: string;
+    active: string;
+    inactive: string;
+    notes: string;
+    saveNotes: string;
+    rank: string;
+    name: string;
+    search: string;
+    backToGroup: string;
+    backToList: string;
+    ratingUnavailable: string;
+    notPlayed: string;
+  };
 }
 
 const translations: Record<Language, Translations> = {
@@ -209,6 +248,45 @@ const translations: Record<Language, Translations> = {
       weekly: 'Weekly',
       biweekly: 'Biweekly',
     },
+    training: {
+      title: 'Training',
+      subtitle: 'Training groups and round-robin tournaments.',
+      participants: 'Participants',
+      sessions: 'Sessions',
+      standings: 'Standings',
+      attendance: 'Attendance',
+      pairings: 'Pairings',
+      round: 'Round',
+      result: 'Result',
+      present: 'Present',
+      absent: 'Absent',
+      points: 'Points',
+      played: 'Played',
+      wins: 'W',
+      draws: 'D',
+      losses: 'L',
+      rating: 'Rating',
+      bye: 'Bye',
+      semester: 'Semester',
+      startSession: 'Start Session',
+      saveAttendance: 'Save Attendance',
+      saveResults: 'Save Results',
+      addParticipant: 'Add Participant',
+      removeParticipant: 'Remove',
+      noGroups: 'No training groups yet.',
+      tournament: 'Tournament',
+      active: 'Active',
+      inactive: 'Inactive',
+      notes: 'Notes',
+      saveNotes: 'Save Notes',
+      rank: '#',
+      name: 'Name',
+      search: 'Search...',
+      backToGroup: 'Back to group',
+      backToList: 'Back to training',
+      ratingUnavailable: 'N/A',
+      notPlayed: 'Not played',
+    },
   },
   sv: {
     navbar: {
@@ -320,6 +398,45 @@ const translations: Record<Language, Translations> = {
       recurring: 'Återkommande',
       weekly: 'Varje vecka',
       biweekly: 'Varannan vecka',
+    },
+    training: {
+      title: 'Träning',
+      subtitle: 'Träningsgrupper och rundturneringar.',
+      participants: 'Deltagare',
+      sessions: 'Tillfällen',
+      standings: 'Ställning',
+      attendance: 'Närvaro',
+      pairings: 'Lottning',
+      round: 'Rond',
+      result: 'Resultat',
+      present: 'Närvarande',
+      absent: 'Frånvarande',
+      points: 'Poäng',
+      played: 'Spelade',
+      wins: 'V',
+      draws: 'R',
+      losses: 'F',
+      rating: 'Rating',
+      bye: 'Bye',
+      semester: 'Termin',
+      startSession: 'Starta tillfälle',
+      saveAttendance: 'Spara närvaro',
+      saveResults: 'Spara resultat',
+      addParticipant: 'Lägg till deltagare',
+      removeParticipant: 'Ta bort',
+      noGroups: 'Inga träningsgrupper ännu.',
+      tournament: 'Turnering',
+      active: 'Aktiv',
+      inactive: 'Inaktiv',
+      notes: 'Anteckningar',
+      saveNotes: 'Spara anteckningar',
+      rank: '#',
+      name: 'Namn',
+      search: 'Sök...',
+      backToGroup: 'Tillbaka till gruppen',
+      backToList: 'Tillbaka till träning',
+      ratingUnavailable: 'Saknas',
+      notPlayed: 'Ej spelat',
     },
   },
 };

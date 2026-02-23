@@ -351,19 +351,40 @@ async function seed() {
     return d.toISOString();
   }
 
+  // Find the next occurrence of a specific weekday (0=Sun, 1=Mon, 2=Tue, ...)
+  function nextWeekday(targetDay: number, hour: number, minute: number = 0): string {
+    const d = new Date(now);
+    const currentDay = d.getDay();
+    let daysUntil = targetDay - currentDay;
+    if (daysUntil <= 0) daysUntil += 7;
+    d.setDate(d.getDate() + daysUntil);
+    d.setHours(hour, minute, 0, 0);
+    return d.toISOString();
+  }
+
+  function nextWeekdayEndDate(targetDay: number, weeksAhead: number): string {
+    const d = new Date(now);
+    const currentDay = d.getDay();
+    let daysUntil = targetDay - currentDay;
+    if (daysUntil <= 0) daysUntil += 7;
+    d.setDate(d.getDate() + daysUntil + weeksAhead * 7);
+    d.setHours(0, 0, 0, 0);
+    return d.toISOString();
+  }
+
   const events = [
     {
       title: 'Tisdagsträning',
       slug: 'tisdagstraning',
       status: 'published' as const,
       description: 'Öppen träning för alla medlemmar. Kom och spela partier eller analysera med tränare.',
-      startDate: futureDate(2, 18, 0),
-      endDate: futureDate(2, 21, 0),
+      startDate: nextWeekday(2, 18, 0),  // Tuesday 18:00
+      endDate: nextWeekday(2, 21, 0),    // Tuesday 21:00
       location: 'Klubblokalen',
       category: 'training' as const,
       isRecurring: true,
       recurrenceType: 'weekly' as const,
-      recurrenceEndDate: futureDate(56, 0),
+      recurrenceEndDate: nextWeekdayEndDate(2, 8),
       excludedDates: [],
     },
     {
@@ -371,13 +392,13 @@ async function seed() {
       slug: 'juniortraning',
       status: 'published' as const,
       description: 'Schackträning för juniorer upp till 18 år. Nybörjare och avancerade välkomna.',
-      startDate: futureDate(4, 17, 0),
-      endDate: futureDate(4, 19, 0),
+      startDate: nextWeekday(4, 17, 0),  // Thursday 17:00
+      endDate: nextWeekday(4, 19, 0),    // Thursday 19:00
       location: 'Klubblokalen',
       category: 'junior' as const,
       isRecurring: true,
       recurrenceType: 'weekly' as const,
-      recurrenceEndDate: futureDate(56, 0),
+      recurrenceEndDate: nextWeekdayEndDate(4, 8),
       excludedDates: [],
     },
     {
@@ -430,6 +451,140 @@ async function seed() {
     } catch (e) {
       console.error(`Error creating event "${event.title}":`, e);
     }
+  }
+
+  // Create training group
+  try {
+    const existingGroup = await payload.find({
+      collection: 'training-groups',
+      where: { slug: { equals: 'tisdagsgruppen-vt2026' } },
+    });
+
+    if (existingGroup.docs.length > 0) {
+      console.log('Training group already exists, skipping.');
+    } else {
+      // Find the Tisdagsträning event to link
+      const trainingEvent = await payload.find({
+        collection: 'events',
+        where: { slug: { equals: 'tisdagstraning' } },
+        limit: 1,
+      });
+
+      const group = await payload.create({
+        collection: 'training-groups',
+        data: {
+          name: 'Tisdagsgruppen VT2026',
+          slug: 'tisdagsgruppen-vt2026',
+          status: 'active',
+          description: 'Tisdagsträningens rundturneringsgrupp för vårterminen 2026.',
+          semester: 'VT2026',
+          hasTournament: true,
+          event: trainingEvent.docs[0]?.id ?? undefined,
+          createdBy: adminUser.id,
+          participants: [
+            { name: 'Erik Lindström', ssfId: 100001, active: true },
+            { name: 'Anna Bergqvist', ssfId: 100002, active: true },
+            { name: 'Lars Johansson', ssfId: 100003, active: true },
+            { name: 'Maria Nilsson', ssfId: 100004, active: true },
+            { name: 'Karl Svensson', ssfId: 100005, active: true },
+            { name: 'Sofia Andersson', ssfId: 100006, active: true },
+          ],
+        },
+      });
+      console.log('Created training group: Tisdagsgruppen VT2026');
+
+      // Update the event with a link back to the training group
+      if (trainingEvent.docs[0]) {
+        await payload.update({
+          collection: 'events',
+          id: trainingEvent.docs[0].id,
+          data: {
+            link: `/training/${group.id}`,
+            linkLabel: 'Tisdagsgruppen VT2026',
+          },
+        });
+        console.log('Updated Tisdagsträning event with training group link');
+      }
+
+      // Get participant IDs from created group
+      const participants = group.participants || [];
+      const pIds = participants.map((p: { id?: string | null }) => p.id!);
+
+      // Create past training sessions with attendance and game results
+      // Find previous Tuesdays for session dates
+      function pastTuesday(weeksAgo: number): string {
+        const d = new Date(now);
+        const currentDay = d.getDay();
+        // Days since last Tuesday
+        let daysSinceTuesday = currentDay - 2;
+        if (daysSinceTuesday < 0) daysSinceTuesday += 7;
+        d.setDate(d.getDate() - daysSinceTuesday - (weeksAgo - 1) * 7);
+        const y = d.getFullYear();
+        const m = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        return `${y}-${m}-${day}`;
+      }
+
+      // Session 1: 3 weeks ago — Round 1
+      await payload.create({
+        collection: 'training-sessions',
+        data: {
+          group: group.id,
+          sessionDate: pastTuesday(3),
+          notes: 'Bra start på terminen! Alla närvarande.',
+          attendance: pIds.map((id: string) => ({ participantId: id, present: true })),
+          games: [
+            { round: 1, whiteId: pIds[0], blackId: pIds[5], result: '1-0' },
+            { round: 1, whiteId: pIds[1], blackId: pIds[4], result: '0.5-0.5' },
+            { round: 1, whiteId: pIds[2], blackId: pIds[3], result: '0-1' },
+          ],
+        },
+      });
+      console.log('Created training session 1');
+
+      // Session 2: 2 weeks ago — Round 2
+      await payload.create({
+        collection: 'training-sessions',
+        data: {
+          group: group.id,
+          sessionDate: pastTuesday(2),
+          notes: 'Sofia frånvarande, Karl fick bye.',
+          attendance: [
+            { participantId: pIds[0], present: true },
+            { participantId: pIds[1], present: true },
+            { participantId: pIds[2], present: true },
+            { participantId: pIds[3], present: true },
+            { participantId: pIds[4], present: true },
+            { participantId: pIds[5], present: false },
+          ],
+          games: [
+            { round: 2, whiteId: pIds[5], blackId: pIds[4], result: 'bye-black' },
+            { round: 2, whiteId: pIds[0], blackId: pIds[3], result: '1-0' },
+            { round: 2, whiteId: pIds[1], blackId: pIds[2], result: '1-0' },
+          ],
+        },
+      });
+      console.log('Created training session 2');
+
+      // Session 3: 1 week ago — Round 3
+      await payload.create({
+        collection: 'training-sessions',
+        data: {
+          group: group.id,
+          sessionDate: pastTuesday(1),
+          notes: 'Spännande ronder. Erik fortsätter leda.',
+          attendance: pIds.map((id: string) => ({ participantId: id, present: true })),
+          games: [
+            { round: 3, whiteId: pIds[0], blackId: pIds[2], result: '0.5-0.5' },
+            { round: 3, whiteId: pIds[5], blackId: pIds[3], result: '1-0' },
+            { round: 3, whiteId: pIds[4], blackId: pIds[1], result: '0-1' },
+          ],
+        },
+      });
+      console.log('Created training session 3');
+    }
+  } catch (e) {
+    console.error('Error creating training data:', e);
   }
 
   console.log('Seeding complete!');

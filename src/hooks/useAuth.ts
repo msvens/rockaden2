@@ -15,15 +15,23 @@ interface AuthState {
   isLoading: boolean
 }
 
+// Short-lived cache (5 minutes) to avoid re-fetching on every component mount
+// during normal navigation, while still picking up login/logout changes.
 let cachedResult: AuthState | null = null
+let cacheTimestamp = 0
+const CACHE_TTL = 5 * 60 * 1000
 
 export function useAuth(): AuthState {
+  const now = Date.now()
+  const validCache = cachedResult && now - cacheTimestamp < CACHE_TTL ? cachedResult : null
+
   const [state, setState] = useState<AuthState>(
-    cachedResult || { user: null, isEditor: false, isLoading: true }
+    validCache || { user: null, isEditor: false, isLoading: true }
   )
 
   useEffect(() => {
-    if (cachedResult) {
+    const currentNow = Date.now()
+    if (cachedResult && currentNow - cacheTimestamp < CACHE_TTL) {
       setState(cachedResult)
       return
     }
@@ -41,11 +49,13 @@ export function useAuth(): AuthState {
           isLoading: false,
         }
         cachedResult = result
+        cacheTimestamp = Date.now()
         setState(result)
       })
       .catch(() => {
         const result: AuthState = { user: null, isEditor: false, isLoading: false }
         cachedResult = result
+        cacheTimestamp = Date.now()
         setState(result)
       })
   }, [])

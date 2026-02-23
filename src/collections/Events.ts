@@ -59,6 +59,29 @@ export const Events: CollectionConfig = {
       maxLength: 500,
     },
     {
+      name: 'link',
+      label: { en: 'Link', sv: 'Länk' },
+      type: 'text',
+      admin: {
+        description: {
+          en: 'URL for more information. Internal (e.g. /training/1) or external (https://...).',
+          sv: 'URL till mer information. Intern (t.ex. /training/1) eller extern (https://...).',
+        },
+      },
+    },
+    {
+      name: 'linkLabel',
+      label: { en: 'Link Label', sv: 'Länktext' },
+      type: 'text',
+      admin: {
+        description: {
+          en: 'Text shown for the link, e.g. "More info" or "Go to training".',
+          sv: 'Text som visas för länken, t.ex. "Mer info" eller "Gå till träning".',
+        },
+        condition: (data) => !!data?.link,
+      },
+    },
+    {
       name: 'startDate',
       label: { en: 'Starts', sv: 'Börjar' },
       type: 'date',

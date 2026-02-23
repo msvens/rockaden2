@@ -10,7 +10,7 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "check": "pnpm typecheck && pnpm lint && pnpm build",
-    "seed": "tsx scripts/seed.ts",
+    "seed": "tsx --env-file=.env scripts/seed.ts",
     "generate:types": "payload generate:types"
   },
   "dependencies": {

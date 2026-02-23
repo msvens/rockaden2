@@ -73,6 +73,14 @@ export function DayDetail({ day, month, year, events, isEditor, translations, lo
                         {event.description}
                       </p>
                     )}
+                    {event.link && (
+                      <Link
+                        href={event.link}
+                        className={`text-sm ${colors.text} font-medium hover:underline mt-1 inline-block`}
+                      >
+                        {event.linkLabel || (event.link.startsWith('http') ? event.link : 'More info')} &rarr;
+                      </Link>
+                    )}
                   </div>
                   {isEditor && (
                     <Link

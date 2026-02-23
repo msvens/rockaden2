@@ -10,6 +10,8 @@ export interface CalendarEvent {
   category: EventCategory
   source: 'cms' | 'ssf'
   parentId?: string
+  link?: string
+  linkLabel?: string
 }
 
 export const categoryColors: Record<EventCategory, { bg: string; text: string; dot: string }> = {

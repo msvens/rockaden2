@@ -8,6 +8,8 @@ interface EventDoc {
   description?: string | null
   location?: string | null
   category?: string | null
+  link?: string | null
+  linkLabel?: string | null
   isRecurring?: boolean | null
   recurrenceType?: 'weekly' | 'biweekly' | null
   recurrenceEndDate?: string | null
@@ -32,6 +34,8 @@ export function expandRecurringEvents(docs: EventDoc[]): CalendarEvent[] {
       location: doc.location ?? undefined,
       category: (doc.category as EventCategory) || 'other',
       source: 'cms',
+      link: doc.link ?? undefined,
+      linkLabel: doc.linkLabel ?? undefined,
     }
 
     if (!doc.isRecurring || !doc.recurrenceType || !doc.recurrenceEndDate) {
