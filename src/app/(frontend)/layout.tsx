@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 
 import { ThemeProvider } from '@/context/ThemeContext';
 import { LanguageProvider } from '@/context/LanguageContext';
-import Navbar from '@/components/Navbar';
+import NavbarConfig from '@/components/NavbarConfig';
 import { Footer } from '@/components/Footer';
 import './globals.css';
 
@@ -28,7 +28,7 @@ export default function FrontendLayout({ children }: { children: React.ReactNode
       <body className={`${geistSans.variable} ${geistMono.variable} font-sans`}>
         <ThemeProvider>
           <LanguageProvider>
-            <Navbar />
+            <NavbarConfig />
             <main className="pt-16 min-h-screen">
               {children}
             </main>

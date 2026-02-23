@@ -1,6 +1,8 @@
 import { buildConfig } from 'payload'
 import { postgresAdapter } from '@payloadcms/db-postgres'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
+import { sv } from '@payloadcms/translations/languages/sv'
+import { en } from '@payloadcms/translations/languages/en'
 import sharp from 'sharp'
 import path from 'path'
 import fs from 'fs'
@@ -10,6 +12,7 @@ import { Users } from './collections/Users'
 import { News } from './collections/News'
 import { Pages } from './collections/Pages'
 import { Media } from './collections/Media'
+import { Events } from './collections/Events'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -31,7 +34,11 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, News, Pages, Media],
+  i18n: {
+    supportedLanguages: { sv, en },
+    fallbackLanguage: 'sv',
+  },
+  collections: [Users, News, Pages, Media, Events],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {

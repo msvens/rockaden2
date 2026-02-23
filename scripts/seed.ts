@@ -42,7 +42,6 @@ async function seed() {
       publishedAt: new Date('2026-02-01').toISOString(),
       excerpt: 'SK Rockaden lanserar sin nya moderna hemsida byggd med PayloadCMS och Next.js.',
       category: 'nyheter' as const,
-      locale: 'sv' as const,
       content: {
         root: {
           type: 'root',
@@ -82,7 +81,6 @@ async function seed() {
       publishedAt: new Date('2026-01-28').toISOString(),
       excerpt: 'Laguppställningen för Allsvenskan 2026 är nu fastställd. SK Rockaden ställer upp med två lag.',
       category: 'allsvenskan' as const,
-      locale: 'sv' as const,
       content: {
         root: {
           type: 'root',
@@ -112,7 +110,6 @@ async function seed() {
       publishedAt: new Date('2026-01-15').toISOString(),
       excerpt: 'Träningen på tisdagskvällar startar igen den 21 januari. Välkomna tillbaka!',
       category: 'training' as const,
-      locale: 'sv' as const,
       content: {
         root: {
           type: 'root',
@@ -163,7 +160,6 @@ async function seed() {
       publishedAt: new Date('2026-01-10').toISOString(),
       excerpt: 'SK Rockaden arrangerar en skolschack-turnering i samarbete med Montessoriskolan Centrum.',
       category: 'skolschack' as const,
-      locale: 'sv' as const,
       content: {
         root: {
           type: 'root',
@@ -193,7 +189,6 @@ async function seed() {
       publishedAt: null,
       excerpt: 'Planerad snabbschack-turnering för klubbmedlemmar i mars.',
       category: 'turneringar' as const,
-      locale: 'sv' as const,
       content: {
         root: {
           type: 'root',
@@ -255,7 +250,6 @@ async function seed() {
         data: {
           title: 'Om SK Rockaden',
           slug: 'om-rockaden',
-          locale: 'sv',
           content: {
             root: {
               type: 'root',
@@ -346,6 +340,96 @@ async function seed() {
     }
   } catch (e) {
     console.error('Error creating About page:', e);
+  }
+
+  // Create events
+  const now = new Date();
+  function futureDate(daysFromNow: number, hour: number, minute: number = 0): string {
+    const d = new Date(now);
+    d.setDate(d.getDate() + daysFromNow);
+    d.setHours(hour, minute, 0, 0);
+    return d.toISOString();
+  }
+
+  const events = [
+    {
+      title: 'Tisdagsträning',
+      slug: 'tisdagstraning',
+      status: 'published' as const,
+      description: 'Öppen träning för alla medlemmar. Kom och spela partier eller analysera med tränare.',
+      startDate: futureDate(2, 18, 0),
+      endDate: futureDate(2, 21, 0),
+      location: 'Klubblokalen',
+      category: 'training' as const,
+      isRecurring: true,
+      recurrenceType: 'weekly' as const,
+      recurrenceEndDate: futureDate(56, 0),
+      excludedDates: [],
+    },
+    {
+      title: 'Juniorträning',
+      slug: 'juniortraning',
+      status: 'published' as const,
+      description: 'Schackträning för juniorer upp till 18 år. Nybörjare och avancerade välkomna.',
+      startDate: futureDate(4, 17, 0),
+      endDate: futureDate(4, 19, 0),
+      location: 'Klubblokalen',
+      category: 'junior' as const,
+      isRecurring: true,
+      recurrenceType: 'weekly' as const,
+      recurrenceEndDate: futureDate(56, 0),
+      excludedDates: [],
+    },
+    {
+      title: 'Allsvenskan Omgång 5 – Rockaden vs Kung',
+      slug: 'allsvenskan-omgang-5',
+      status: 'published' as const,
+      description: 'Hemmamatch i Allsvenskan Division 1. Kom och heja på laget!',
+      startDate: futureDate(8, 10, 0),
+      endDate: futureDate(8, 17, 0),
+      location: 'Klubblokalen',
+      category: 'allsvenskan' as const,
+    },
+    {
+      title: 'Rockadens blixtmästerskap',
+      slug: 'rockadens-blixtmasterskap',
+      status: 'published' as const,
+      description: 'Intern blitzturnering 3+2. Anmälan på plats senast kl 17:45.',
+      startDate: futureDate(12, 18, 0),
+      endDate: futureDate(12, 21, 30),
+      location: 'Klubblokalen',
+      category: 'tournament' as const,
+    },
+    {
+      title: 'Skolschack på Eriksdalsskolan',
+      slug: 'skolschack-eriksdalsskolan',
+      status: 'published' as const,
+      description: 'Schacklektioner för elever i åk 3-5 i samarbete med Eriksdalsskolan.',
+      startDate: futureDate(6, 13, 0),
+      endDate: futureDate(6, 14, 30),
+      location: 'Eriksdalsskolan',
+      category: 'skolschack' as const,
+    },
+  ];
+
+  for (const event of events) {
+    try {
+      const existing = await payload.find({
+        collection: 'events',
+        where: { slug: { equals: event.slug } },
+      });
+      if (existing.docs.length > 0) {
+        console.log(`Event "${event.title}" already exists, skipping.`);
+        continue;
+      }
+      await payload.create({
+        collection: 'events',
+        data: event,
+      });
+      console.log(`Created event: ${event.title}`);
+    } catch (e) {
+      console.error(`Error creating event "${event.title}":`, e);
+    }
   }
 
   console.log('Seeding complete!');

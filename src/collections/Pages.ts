@@ -3,6 +3,10 @@ import { slugify } from '@/lib/slugify'
 
 export const Pages: CollectionConfig = {
   slug: 'pages',
+  labels: {
+    singular: { en: 'Page', sv: 'Sida' },
+    plural: { en: 'Pages', sv: 'Sidor' },
+  },
   admin: {
     useAsTitle: 'title',
   },
@@ -19,6 +23,7 @@ export const Pages: CollectionConfig = {
   fields: [
     {
       name: 'title',
+      label: { en: 'Title', sv: 'Titel' },
       type: 'text',
       required: true,
     },
@@ -34,16 +39,8 @@ export const Pages: CollectionConfig = {
     },
     {
       name: 'content',
+      label: { en: 'Content', sv: 'Innehåll' },
       type: 'richText',
-    },
-    {
-      name: 'locale',
-      type: 'select',
-      options: [
-        { label: 'Svenska', value: 'sv' },
-        { label: 'English', value: 'en' },
-      ],
-      defaultValue: 'sv',
     },
   ],
 }

@@ -71,6 +71,7 @@ export interface Config {
     news: News;
     pages: Page;
     media: Media;
+    events: Event;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -82,6 +83,7 @@ export interface Config {
     news: NewsSelect<false> | NewsSelect<true>;
     pages: PagesSelect<false> | PagesSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    events: EventsSelect<false> | EventsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -125,7 +127,7 @@ export interface UserAuthOperations {
 export interface User {
   id: number;
   name: string;
-  role: 'admin' | 'editor';
+  role: 'admin' | 'editor' | 'trainer';
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -177,7 +179,6 @@ export interface News {
   featuredImage?: (number | null) | Media;
   author?: (number | null) | User;
   category?: ('nyheter' | 'turneringar' | 'training' | 'skolschack' | 'allsvenskan') | null;
-  locale?: ('sv' | 'en') | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -252,7 +253,47 @@ export interface Page {
     };
     [k: string]: unknown;
   } | null;
-  locale?: ('sv' | 'en') | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "events".
+ */
+export interface Event {
+  id: number;
+  title: string;
+  /**
+   * Auto-generated from title. Edit to override.
+   */
+  slug: string;
+  status: 'draft' | 'published';
+  description?: string | null;
+  startDate: string;
+  endDate: string;
+  location?: string | null;
+  category?: ('training' | 'tournament' | 'junior' | 'allsvenskan' | 'skolschack' | 'other') | null;
+  /**
+   * Enable to repeat this event on a weekly or biweekly schedule.
+   */
+  isRecurring?: boolean | null;
+  recurrenceType?: ('weekly' | 'biweekly') | null;
+  /**
+   * The date when the recurring series stops.
+   */
+  recurrenceEndDate?: string | null;
+  /**
+   * Array of ISO date strings to skip, e.g. ["2026-03-11", "2026-04-01"]
+   */
+  excludedDates?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -295,6 +336,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'media';
         value: number | Media;
+      } | null)
+    | ({
+        relationTo: 'events';
+        value: number | Event;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -376,7 +421,6 @@ export interface NewsSelect<T extends boolean = true> {
   featuredImage?: T;
   author?: T;
   category?: T;
-  locale?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -388,7 +432,6 @@ export interface PagesSelect<T extends boolean = true> {
   title?: T;
   slug?: T;
   content?: T;
-  locale?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -443,6 +486,26 @@ export interface MediaSelect<T extends boolean = true> {
               filename?: T;
             };
       };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "events_select".
+ */
+export interface EventsSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  status?: T;
+  description?: T;
+  startDate?: T;
+  endDate?: T;
+  location?: T;
+  category?: T;
+  isRecurring?: T;
+  recurrenceType?: T;
+  recurrenceEndDate?: T;
+  excludedDates?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

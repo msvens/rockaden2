@@ -17,6 +17,9 @@ importers:
       '@heroicons/react':
         specifier: ^2.2.0
         version: 2.2.0(react@19.2.4)
+      '@msvens/schack-se-sdk':
+        specifier: github:msvens/schack-se-sdk#v0.3.0
+        version: https://codeload.github.com/msvens/schack-se-sdk/tar.gz/f87f8381232157065865d75edbc75e3e2fb725d2
       '@payloadcms/db-postgres':
         specifier: 3.76.1
         version: 3.76.1(payload@3.76.1(graphql@16.12.0)(typescript@5.9.3))
@@ -1140,6 +1143,10 @@ packages:
       monaco-editor: '>= 0.25.0 < 1'
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+
+  '@msvens/schack-se-sdk@https://codeload.github.com/msvens/schack-se-sdk/tar.gz/f87f8381232157065865d75edbc75e3e2fb725d2':
+    resolution: {tarball: https://codeload.github.com/msvens/schack-se-sdk/tar.gz/f87f8381232157065865d75edbc75e3e2fb725d2}
+    version: 0.3.0
 
   '@napi-rs/wasm-runtime@0.2.12':
     resolution: {integrity: sha512-ZVWUcfwY4E/yPitQJl481FjFo3K22D6qF0DuFH6Y/nbnE11GY5uguDxZMGXPQ8WQ0128MXQD7TnfHyK4oWoIJQ==}
@@ -4573,6 +4580,8 @@ snapshots:
       monaco-editor: 0.55.1
       react: 19.2.4
       react-dom: 19.2.4(react@19.2.4)
+
+  '@msvens/schack-se-sdk@https://codeload.github.com/msvens/schack-se-sdk/tar.gz/f87f8381232157065865d75edbc75e3e2fb725d2': {}
 
   '@napi-rs/wasm-runtime@0.2.12':
     dependencies:

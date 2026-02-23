@@ -294,14 +294,6 @@
           "notNull": false,
           "default": "'nyheter'"
         },
-        "locale": {
-          "name": "locale",
-          "type": "enum_news_locale",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "'sv'"
-        },
         "updated_at": {
           "name": "updated_at",
           "type": "timestamp(3) with time zone",
@@ -455,14 +447,6 @@
           "type": "jsonb",
           "primaryKey": false,
           "notNull": false
-        },
-        "locale": {
-          "name": "locale",
-          "type": "enum_pages_locale",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "'sv'"
         },
         "updated_at": {
           "name": "updated_at",
@@ -825,6 +809,163 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
+    "public.events": {
+      "name": "events",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "title": {
+          "name": "title",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "slug": {
+          "name": "slug",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "enum_events_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'draft'"
+        },
+        "description": {
+          "name": "description",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "start_date": {
+          "name": "start_date",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "end_date": {
+          "name": "end_date",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "location": {
+          "name": "location",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "category": {
+          "name": "category",
+          "type": "enum_events_category",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'other'"
+        },
+        "is_recurring": {
+          "name": "is_recurring",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "recurrence_type": {
+          "name": "recurrence_type",
+          "type": "enum_events_recurrence_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "recurrence_end_date": {
+          "name": "recurrence_end_date",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "excluded_dates": {
+          "name": "excluded_dates",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "events_slug_idx": {
+          "name": "events_slug_idx",
+          "columns": [
+            {
+              "expression": "slug",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "events_updated_at_idx": {
+          "name": "events_updated_at_idx",
+          "columns": [
+            {
+              "expression": "updated_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "events_created_at_idx": {
+          "name": "events_created_at_idx",
+          "columns": [
+            {
+              "expression": "created_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.payload_kv": {
       "name": "payload_kv",
       "schema": "",
@@ -1008,6 +1149,12 @@
           "type": "integer",
           "primaryKey": false,
           "notNull": false
+        },
+        "events_id": {
+          "name": "events_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {
@@ -1115,6 +1262,21 @@
           "concurrently": false,
           "method": "btree",
           "with": {}
+        },
+        "payload_locked_documents_rels_events_id_idx": {
+          "name": "payload_locked_documents_rels_events_id_idx",
+          "columns": [
+            {
+              "expression": "events_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
       "foreignKeys": {
@@ -1176,6 +1338,19 @@
           "tableTo": "media",
           "columnsFrom": [
             "media_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "payload_locked_documents_rels_events_fk": {
+          "name": "payload_locked_documents_rels_events_fk",
+          "tableFrom": "payload_locked_documents_rels",
+          "tableTo": "events",
+          "columnsFrom": [
+            "events_id"
           ],
           "columnsTo": [
             "id"
@@ -1495,7 +1670,8 @@
       "schema": "public",
       "values": [
         "admin",
-        "editor"
+        "editor",
+        "trainer"
       ]
     },
     "public.enum_news_status": {
@@ -1517,20 +1693,32 @@
         "allsvenskan"
       ]
     },
-    "public.enum_news_locale": {
-      "name": "enum_news_locale",
+    "public.enum_events_status": {
+      "name": "enum_events_status",
       "schema": "public",
       "values": [
-        "sv",
-        "en"
+        "draft",
+        "published"
       ]
     },
-    "public.enum_pages_locale": {
-      "name": "enum_pages_locale",
+    "public.enum_events_category": {
+      "name": "enum_events_category",
       "schema": "public",
       "values": [
-        "sv",
-        "en"
+        "training",
+        "tournament",
+        "junior",
+        "allsvenskan",
+        "skolschack",
+        "other"
+      ]
+    },
+    "public.enum_events_recurrence_type": {
+      "name": "enum_events_recurrence_type",
+      "schema": "public",
+      "values": [
+        "weekly",
+        "biweekly"
       ]
     }
   },
@@ -1544,6 +1732,6 @@
     "tables": {},
     "columns": {}
   },
-  "id": "a72b8cfb-211b-4c66-a4da-2fc4064f6769",
+  "id": "0bcc9f7c-b498-4421-bfe4-0b4116678eaa",
   "prevId": "00000000-0000-0000-0000-000000000000"
 }

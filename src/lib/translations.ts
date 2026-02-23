@@ -4,14 +4,21 @@ export interface Translations {
   navbar: {
     navigation: {
       news: string;
-      about: string;
+      calendar: string;
       training: string;
+      members: string;
+      about: string;
       play: string;
+      material: string;
+      leaders: string;
     };
     language: {
       english: string;
       swedish: string;
     };
+    more: string;
+    lightMode: string;
+    darkMode: string;
   };
   footer: {
     navigation: {
@@ -57,6 +64,37 @@ export interface Translations {
     skolschack: string;
     allsvenskan: string;
   };
+  calendar: {
+    title: string;
+    subtitle: string;
+    today: string;
+    noEvents: string;
+    addEvent: string;
+    editEvent: string;
+    time: string;
+    location: string;
+    moreEvents: string;
+    days: {
+      mon: string;
+      tue: string;
+      wed: string;
+      thu: string;
+      fri: string;
+      sat: string;
+      sun: string;
+    };
+    eventCategories: {
+      training: string;
+      tournament: string;
+      junior: string;
+      allsvenskan: string;
+      skolschack: string;
+      other: string;
+    };
+    recurring: string;
+    weekly: string;
+    biweekly: string;
+  };
 }
 
 const translations: Record<Language, Translations> = {
@@ -64,14 +102,21 @@ const translations: Record<Language, Translations> = {
     navbar: {
       navigation: {
         news: 'News',
-        about: 'About',
+        calendar: 'Calendar',
         training: 'Training',
+        members: 'Members',
+        about: 'About',
         play: 'Play Chess',
+        material: 'Material',
+        leaders: 'Leaders',
       },
       language: {
         english: 'English',
         swedish: 'Svenska',
       },
+      more: 'More',
+      lightMode: 'Light Mode',
+      darkMode: 'Dark Mode',
     },
     footer: {
       navigation: {
@@ -133,19 +178,57 @@ const translations: Record<Language, Translations> = {
       skolschack: 'School Chess',
       allsvenskan: 'Allsvenskan',
     },
+    calendar: {
+      title: 'Calendar',
+      subtitle: 'Upcoming events and activities at SK Rockaden.',
+      today: 'Today',
+      noEvents: 'No events this day.',
+      addEvent: 'Add event',
+      editEvent: 'Edit event',
+      time: 'Time',
+      location: 'Location',
+      moreEvents: 'more',
+      days: {
+        mon: 'Mon',
+        tue: 'Tue',
+        wed: 'Wed',
+        thu: 'Thu',
+        fri: 'Fri',
+        sat: 'Sat',
+        sun: 'Sun',
+      },
+      eventCategories: {
+        training: 'Training',
+        tournament: 'Tournament',
+        junior: 'Junior',
+        allsvenskan: 'Allsvenskan',
+        skolschack: 'School Chess',
+        other: 'Other',
+      },
+      recurring: 'Recurring',
+      weekly: 'Weekly',
+      biweekly: 'Biweekly',
+    },
   },
   sv: {
     navbar: {
       navigation: {
         news: 'Nyheter',
-        about: 'Om Rockaden',
+        calendar: 'Kalender',
         training: 'Träning',
+        members: 'Medlemmar',
+        about: 'Om Rockaden',
         play: 'Spela Schack',
+        material: 'Material',
+        leaders: 'Ledare',
       },
       language: {
         english: 'English',
         swedish: 'Svenska',
       },
+      more: 'Mer',
+      lightMode: 'Ljust Läge',
+      darkMode: 'Mörkt Läge',
     },
     footer: {
       navigation: {
@@ -206,6 +289,37 @@ const translations: Record<Language, Translations> = {
       training: 'Träning',
       skolschack: 'Skolschack',
       allsvenskan: 'Allsvenskan',
+    },
+    calendar: {
+      title: 'Kalender',
+      subtitle: 'Kommande evenemang och aktiviteter på SK Rockaden.',
+      today: 'Idag',
+      noEvents: 'Inga händelser denna dag.',
+      addEvent: 'Lägg till händelse',
+      editEvent: 'Redigera händelse',
+      time: 'Tid',
+      location: 'Plats',
+      moreEvents: 'till',
+      days: {
+        mon: 'Mån',
+        tue: 'Tis',
+        wed: 'Ons',
+        thu: 'Tor',
+        fri: 'Fre',
+        sat: 'Lör',
+        sun: 'Sön',
+      },
+      eventCategories: {
+        training: 'Träning',
+        tournament: 'Turnering',
+        junior: 'Junior',
+        allsvenskan: 'Allsvenskan',
+        skolschack: 'Skolschack',
+        other: 'Övrigt',
+      },
+      recurring: 'Återkommande',
+      weekly: 'Varje vecka',
+      biweekly: 'Varannan vecka',
     },
   },
 };
